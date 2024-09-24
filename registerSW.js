@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/GIS-WS24/sw.js', { scope: '/GIS-WS24/' })})}
