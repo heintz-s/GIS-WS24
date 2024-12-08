@@ -1,0 +1,567 @@
+<!DOCTYPE html><html lang="de" dir="ltr" data-has-toc data-has-sidebar data-theme="dark" class="astro-bguv2lll"> <head><link rel="manifest" href="/GIS-WS24/manifest.webmanifest"><script type="module">
+    await import('/pagefind/pagefind-highlight.js');
+    new PagefindHighlight({ highlightParam: "highlight" ,addStyles: false ,markOptions:{
+		className: "pagefind-highlight",
+		exclude: ["[data-pagefind-ignore]", "[data-pagefind-ignore] *"],
+		accuracy: { "value": "complementary",
+        "limiters": [",","",".",":"]
+    },
+    acrossElements: true,
+    synonyms: {
+      "1": "one",
+      "2": "two",
+    }
+	}});
+</script><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Relationale Datenbanken | GIS</title><link rel="canonical" href="https://heintz-s.github.io/GIS-WS24/db/relational/"/><link rel="sitemap" href="/GIS-WS24/sitemap-index.xml"/><link rel="shortcut icon" href="/GIS-WS24/favicon.ico" type="image/x-icon"/><meta name="generator" content="Astro v4.15.2"/><meta name="generator" content="Starlight v0.26.2"/><meta property="og:title" content="Relationale Datenbanken"/><meta property="og:type" content="article"/><meta property="og:url" content="https://heintz-s.github.io/GIS-WS24/db/relational/"/><meta property="og:locale" content="de"/><meta property="og:description"/><meta property="og:site_name" content="GIS"/><meta name="twitter:card" content="summary_large_image"/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg> <svg aria-hidden="true" class="dark astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg> <svg aria-hidden="true" class="auto astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> </template><link rel="stylesheet" href="/GIS-WS24/_astro/index.anSZPmeU.css">
+<style>:root{--sl-badge-default-border: var(--sl-color-accent);--sl-badge-default-bg: var(--sl-color-accent-low);--sl-badge-default-text: #fff;--sl-badge-note-border: var(--sl-color-blue);--sl-badge-note-bg: var(--sl-color-blue-low);--sl-badge-note-text: #fff;--sl-badge-danger-border: var(--sl-color-red);--sl-badge-danger-bg: var(--sl-color-red-low);--sl-badge-danger-text: #fff;--sl-badge-success-border: var(--sl-color-green);--sl-badge-success-bg: var(--sl-color-green-low);--sl-badge-success-text: #fff;--sl-badge-caution-border: var(--sl-color-orange);--sl-badge-caution-bg: var(--sl-color-orange-low);--sl-badge-caution-text: #fff;--sl-badge-tip-border: var(--sl-color-purple);--sl-badge-tip-bg: var(--sl-color-purple-low);--sl-badge-tip-text: #fff}[data-theme=light]:root{--sl-badge-default-bg: var(--sl-color-accent-high);--sl-badge-note-bg: var(--sl-color-blue-high);--sl-badge-danger-bg: var(--sl-color-red-high);--sl-badge-success-bg: var(--sl-color-green-high);--sl-badge-caution-bg: var(--sl-color-orange-high);--sl-badge-tip-bg: var(--sl-color-purple-high)}.sl-badge:where(.astro-avdet4wd){display:inline-block;border:1px solid var(--sl-color-border-badge);border-radius:.25rem;font-family:var(--sl-font-system-mono);line-height:normal;color:var(--sl-color-text-badge);background-color:var(--sl-color-bg-badge);overflow-wrap:anywhere}.sidebar-content .sl-badge:where(.astro-avdet4wd){line-height:1;font-size:var(--sl-text-xs);padding:.125rem .375rem}.sidebar-content a[aria-current=page]>.sl-badge:where(.astro-avdet4wd){--sl-color-bg-badge: transparent;--sl-color-border-badge: currentColor;color:inherit}.default:where(.astro-avdet4wd){--sl-color-bg-badge: var(--sl-badge-default-bg);--sl-color-border-badge: var(--sl-badge-default-border);--sl-color-text-badge: var(--sl-badge-default-text)}.note:where(.astro-avdet4wd){--sl-color-bg-badge: var(--sl-badge-note-bg);--sl-color-border-badge: var(--sl-badge-note-border);--sl-color-text-badge: var(--sl-badge-note-text)}.danger:where(.astro-avdet4wd){--sl-color-bg-badge: var(--sl-badge-danger-bg);--sl-color-border-badge: var(--sl-badge-danger-border);--sl-color-text-badge: var(--sl-badge-danger-text)}.success:where(.astro-avdet4wd){--sl-color-bg-badge: var(--sl-badge-success-bg);--sl-color-border-badge: var(--sl-badge-success-border);--sl-color-text-badge: var(--sl-badge-success-text)}.tip:where(.astro-avdet4wd){--sl-color-bg-badge: var(--sl-badge-tip-bg);--sl-color-border-badge: var(--sl-badge-tip-border);--sl-color-text-badge: var(--sl-badge-tip-text)}.caution:where(.astro-avdet4wd){--sl-color-bg-badge: var(--sl-badge-caution-bg);--sl-color-border-badge: var(--sl-badge-caution-border);--sl-color-text-badge: var(--sl-badge-caution-text)}.small:where(.astro-avdet4wd){font-size:var(--sl-text-xs);padding:.125rem .25rem}.medium:where(.astro-avdet4wd){font-size:var(--sl-text-sm);padding:.175rem .35rem}.large:where(.astro-avdet4wd){font-size:var(--sl-text-base);padding:.225rem .45rem}.sl-markdown-content :is(h1,h2,h3,h4,h5,h6) .sl-badge:where(.astro-avdet4wd){vertical-align:middle}
+.card-grid:where(.astro-zntqmydn){display:grid;gap:1rem}.card-grid:where(.astro-zntqmydn)>*{margin-top:0!important}@media (min-width: 50rem){.card-grid:where(.astro-zntqmydn){grid-template-columns:1fr 1fr;gap:1.5rem}.stagger:where(.astro-zntqmydn){--stagger-height: 5rem;padding-bottom:var(--stagger-height)}.stagger:where(.astro-zntqmydn)>*:nth-child(2n){transform:translateY(var(--stagger-height))}}
+.card:where(.astro-v5tidmuc){--sl-card-border: var(--sl-color-purple);--sl-card-bg: var(--sl-color-purple-low);border:1px solid var(--sl-color-gray-5);background-color:var(--sl-color-black);padding:clamp(1rem,calc(.125rem + 3vw),2.5rem);flex-direction:column;gap:clamp(.5rem,calc(.125rem + 1vw),1rem)}.card:where(.astro-v5tidmuc):nth-child(4n+1){--sl-card-border: var(--sl-color-orange);--sl-card-bg: var(--sl-color-orange-low)}.card:where(.astro-v5tidmuc):nth-child(4n+3){--sl-card-border: var(--sl-color-green);--sl-card-bg: var(--sl-color-green-low)}.card:where(.astro-v5tidmuc):nth-child(4n+4){--sl-card-border: var(--sl-color-red);--sl-card-bg: var(--sl-color-red-low)}.card:where(.astro-v5tidmuc):nth-child(4n+5){--sl-card-border: var(--sl-color-blue);--sl-card-bg: var(--sl-color-blue-low)}.title:where(.astro-v5tidmuc){font-weight:600;font-size:var(--sl-text-h4);color:var(--sl-color-white);line-height:var(--sl-line-height-headings);gap:1rem;align-items:center}.card:where(.astro-v5tidmuc) .icon:where(.astro-v5tidmuc){border:1px solid var(--sl-card-border);background-color:var(--sl-card-bg);padding:.2em;border-radius:.25rem}.card:where(.astro-v5tidmuc) .body:where(.astro-v5tidmuc){margin:0;font-size:clamp(var(--sl-text-sm),calc(.5rem + 1vw),var(--sl-text-body))}
+svg:where(.astro-c6vsoqas){color:var(--sl-icon-color);font-size:var(--sl-icon-size, 1em);width:1em;height:1em}
+starlight-tabs:where(.astro-esqgolmp){display:block}.tablist-wrapper:where(.astro-esqgolmp){overflow-x:auto}:where(.astro-esqgolmp)[role=tablist]{display:flex;list-style:none;border-bottom:2px solid var(--sl-color-gray-5);padding:0}.tab:where(.astro-esqgolmp){margin-bottom:-2px}.tab:where(.astro-esqgolmp)>:where(.astro-esqgolmp)[role=tab]{display:flex;align-items:center;gap:.5rem;padding:0 1.25rem;text-decoration:none;border-bottom:2px solid var(--sl-color-gray-5);color:var(--sl-color-gray-3);outline-offset:var(--sl-outline-offset-inside);overflow-wrap:initial}.tab:where(.astro-esqgolmp) :where(.astro-esqgolmp)[role=tab][aria-selected=true]{color:var(--sl-color-white);border-color:var(--sl-color-text-accent);font-weight:600}.tablist-wrapper:where(.astro-esqgolmp)~[role=tabpanel]{margin-top:1rem}
+.sl-steps{--bullet-size: calc(var(--sl-line-height) * 1rem);--bullet-margin: .375rem;list-style:none;counter-reset:steps-counter var(--sl-steps-start, 0);padding-inline-start:0}.sl-steps>li{counter-increment:steps-counter;position:relative;padding-inline-start:calc(var(--bullet-size) + 1rem);padding-bottom:1px;min-height:calc(var(--bullet-size) + var(--bullet-margin))}.sl-steps>li+li{margin-top:0}.sl-steps>li:before{content:counter(steps-counter);position:absolute;top:0;inset-inline-start:0;width:var(--bullet-size);height:var(--bullet-size);line-height:var(--bullet-size);font-size:var(--sl-text-xs);font-weight:600;text-align:center;color:var(--sl-color-white);background-color:var(--sl-color-gray-6);border-radius:99rem;box-shadow:inset 0 0 0 1px var(--sl-color-gray-5)}.sl-steps>li:after{--guide-width: 1px;content:"";position:absolute;top:calc(var(--bullet-size) + var(--bullet-margin));bottom:var(--bullet-margin);inset-inline-start:calc((var(--bullet-size) - var(--guide-width)) / 2);width:var(--guide-width);background-color:var(--sl-color-hairline-light)}.sl-steps>li>:first-child{--lh: calc(1em * var(--sl-line-height));--shift-y: calc(.5 * (var(--bullet-size) - var(--lh)));transform:translateY(var(--shift-y));margin-bottom:var(--shift-y)}.sl-steps>li>:first-child:where(h1,h2,h3,h4,h5,h6){--lh: calc(1em * var(--sl-line-height-headings))}@supports (--prop: 1lh){.sl-steps>li>:first-child{--lh: 1lh}}
+.sl-link-button:where(.astro-xwgiixxa){align-items:center;border:1px solid transparent;border-radius:999rem;display:inline-flex;font-size:var(--sl-text-sm);gap:.5em;line-height:1.1875;outline-offset:.25rem;padding:.4375rem 1.125rem;text-decoration:none}.sl-link-button:where(.astro-xwgiixxa).primary{background:var(--sl-color-text-accent);border-color:var(--sl-color-text-accent);color:var(--sl-color-black)}.sl-link-button:where(.astro-xwgiixxa).primary:hover{color:var(--sl-color-black)}.sl-link-button:where(.astro-xwgiixxa).secondary{border-color:inherit;color:var(--sl-color-white)}.sl-link-button:where(.astro-xwgiixxa).minimal{color:var(--sl-color-white);padding-inline:0}.sl-link-button:where(.astro-xwgiixxa) svg{flex-shrink:0}@media (min-width: 50rem){.sl-link-button:where(.astro-xwgiixxa){font-size:var(--sl-text-base);padding:.9375rem 1.25rem}}.sl-markdown-content .sl-link-button:where(.astro-xwgiixxa){margin-inline-end:1rem}.sl-markdown-content .sl-link-button:where(.astro-xwgiixxa):not(:where(p *)){margin-block:1rem}
+starlight-file-tree:where(.astro-p67cqifm){--x-space: 1.5rem;--y-space: .125rem;--y-pad: 0;display:block;border:1px solid var(--sl-color-gray-5);padding:1rem;background-color:var(--sl-color-gray-6);font-size:var(--sl-text-xs);font-family:var(--__sl-font-mono);overflow-x:auto}starlight-file-tree:where(.astro-p67cqifm) .directory>details{border:0;padding:0;padding-inline-start:var(--x-space);background:transparent}starlight-file-tree:where(.astro-p67cqifm) .directory>details>summary{margin-inline-start:calc(-1 * var(--x-space));border:0;padding:var(--y-pad) .625rem;font-weight:400;color:var(--sl-color-white);max-width:100%}starlight-file-tree:where(.astro-p67cqifm) .directory>details>summary::marker,starlight-file-tree:where(.astro-p67cqifm) .directory>details>summary::-webkit-details-marker{color:var(--sl-color-gray-3)}starlight-file-tree:where(.astro-p67cqifm) .directory>details>summary:hover,starlight-file-tree:where(.astro-p67cqifm) .directory>details>summary:hover .tree-icon{cursor:pointer;color:var(--sl-color-text-accent);fill:var(--sl-color-text-accent)}starlight-file-tree:where(.astro-p67cqifm) .directory>details>summary:hover~ul{border-color:var(--sl-color-gray-4)}starlight-file-tree:where(.astro-p67cqifm) .directory>details>summary:hover .highlight .tree-icon{fill:var(--sl-color-text-invert)}starlight-file-tree:where(.astro-p67cqifm) ul{margin-inline-start:.5rem;border-inline-start:1px solid var(--sl-color-gray-5);padding:0;padding-inline-start:.125rem;list-style:none}starlight-file-tree:where(.astro-p67cqifm)>ul{margin:0;border:0;padding:0}starlight-file-tree:where(.astro-p67cqifm) li{margin:var(--y-space) 0;padding:var(--y-pad) 0}starlight-file-tree:where(.astro-p67cqifm) .file{margin-inline-start:calc(var(--x-space) - .125rem);color:var(--sl-color-white)}starlight-file-tree:where(.astro-p67cqifm) .tree-entry{display:inline-flex;align-items:flex-start;flex-wrap:wrap;max-width:calc(100% - 1rem)}@media (min-width: 30em){starlight-file-tree:where(.astro-p67cqifm) .tree-entry{flex-wrap:nowrap}}starlight-file-tree:where(.astro-p67cqifm) .tree-entry>:first-child{flex-shrink:0}starlight-file-tree:where(.astro-p67cqifm) .empty{color:var(--sl-color-gray-3);padding-inline-start:.375rem}starlight-file-tree:where(.astro-p67cqifm) .comment{color:var(--sl-color-gray-3);padding-inline-start:1.625rem;max-width:24rem;min-width:12rem}starlight-file-tree:where(.astro-p67cqifm) .highlight{display:inline-block;border-radius:.25rem;padding-inline-end:.5rem;color:var(--sl-color-text-invert);background-color:var(--sl-color-text-accent)}starlight-file-tree:where(.astro-p67cqifm) svg{display:inline;fill:var(--sl-color-gray-3);vertical-align:middle;margin-inline:.25rem .375rem;width:.875rem;height:.875rem}starlight-file-tree:where(.astro-p67cqifm) .highlight svg.tree-icon{fill:var(--sl-color-text-invert)}
+.hljs{color:#383a42;background:#fafafa}.hljs-comment,.hljs-quote{color:#a0a1a7;font-style:italic}.hljs-doctag,.hljs-keyword,.hljs-formula{color:#a626a4}.hljs-section,.hljs-name,.hljs-selector-tag,.hljs-deletion,.hljs-subst{color:#e45649}.hljs-literal{color:#0184bb}.hljs-string,.hljs-regexp,.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string{color:#50a14f}.hljs-attr,.hljs-variable,.hljs-template-variable,.hljs-type,.hljs-selector-class,.hljs-selector-attr,.hljs-selector-pseudo,.hljs-number{color:#986801}.hljs-symbol,.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-title{color:#4078f2}.hljs-built_in,.hljs-title.class_,.hljs-class .hljs-title{color:#c18401}pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;background:#282c34}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-keyword,.hljs-formula{color:#c678dd}.hljs-section,.hljs-name,.hljs-selector-tag,.hljs-deletion,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-string,.hljs-regexp,.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string{color:#98c379}.hljs-attr,.hljs-variable,.hljs-template-variable,.hljs-type,.hljs-selector-class,.hljs-selector-attr,.hljs-selector-pseudo,.hljs-number{color:#d19a66}.hljs-symbol,.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-title.class_,.hljs-class .hljs-title{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}.panes{touch-action:none;display:grid}.pane{position:relative;overflow:hidden}.gutter{position:absolute;bottom:0;right:0;z-index:3;background:#000}.panes-h>.pane>.gutter{cursor:col-resize;top:0;bottom:0;width:8px}.panes-v>.pane>.gutter{cursor:row-resize;left:0;height:8px}.freeSpace{height:1%;width:100%}.editorOverlay{height:100%;margin-top:50%}.panes-h{height:100%}.codejar-linenumbers{height:100%;margin-right:.3em;width:30px!important}.codejar-linenumber{margin-left:.3em}.editorTitle{position:fixed;padding-left:5px;z-index:30}.iframeOverlay{position:absolute;top:0;left:0;width:100%;height:100%;background:transparent;cursor:cursor}.panes-h>.pane>.gutter{background-color:var(--sl-color-hairline-shade);width:.2em}
+</style><script type="module" src="/GIS-WS24/_astro/hoisted.CwruHugw.js"></script>
+<script type="module" src="/GIS-WS24/_astro/page.7qqag-5g.js"></script><style>.tableTitle:where(.astro-2ef2knxv){font-weight:500}.sqlTableLayout:where(.astro-2ef2knxv){display:inline-grid;p{display:block}th,td{border:.1em solid #dddfe1;border-collapse:collapse;width:unset}:is(th:last-child,td:last-child):not(:where(.not-content *)){padding-inline-end:5px}:is(th:first-child,td:first-child):not(:where(.not-content *)){padding-inline-start:5px}table td,table th{padding:5px}table thead th{background-color:#424242ae;color:#fff}table tbody td{color:#636363}table tbody tr{background-color:#ededed}table tbody tr:nth-of-type(odd){background-color:#fff}thead{padding-inline:1em}table{margin-right:2em;border-radius:.5em}th:first-child{border-top-left-radius:.5em}th:last-child{border-top-right-radius:.5em}}
+</style><script src="/GIS-WS24/_astro/PreComponent.astro_astro_type_script_index_0_lang.B_6u6WlD.js" type="module"></script><script src="/GIS-WS24/_astro/Tabs.astro_astro_type_script_index_0_lang.3nBd5krW.js" type="module"></script></head> <body class="astro-bguv2lll"> <a href="#_top" class="astro-7q3lir66">Zum Inhalt springen</a>  <div class="page sl-flex astro-vhvc56sb"> <header class="header astro-vhvc56sb"><div class="header sl-flex astro-kmkmnagf"> <div class="title-wrapper sl-flex astro-kmkmnagf"> <a href="/GIS-WS24/" class="site-title sl-flex astro-m46x6ez3">  <span class="astro-m46x6ez3"> GIS </span> </a>  </div> <div class="sl-flex astro-kmkmnagf"> <site-search data-translations="{&#34;placeholder&#34;:&#34;Suchen&#34;}" class="astro-v37mnknz"> <button data-open-modal disabled aria-label="Suchen" aria-keyshortcuts="Control+K" class="astro-v37mnknz"> <svg aria-hidden="true" class="astro-v37mnknz astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg>  <span class="sl-hidden md:sl-block astro-v37mnknz" aria-hidden="true">Suchen</span> <kbd class="sl-hidden md:sl-flex astro-v37mnknz" style="display: none;"> <kbd class="astro-v37mnknz">Strg</kbd><kbd class="astro-v37mnknz">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="Suchen" class="astro-v37mnknz"> <div class="dialog-frame sl-flex astro-v37mnknz">  <button data-close-modal class="sl-flex md:sl-hidden astro-v37mnknz"> Abbrechen </button> <div class="search-container astro-v37mnknz"> <div id="starlight__search" class="astro-v37mnknz"></div> </div> </div> </dialog> </site-search>  <script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script>    </div> <div class="sl-hidden md:sl-flex right-group astro-kmkmnagf"> <div class="sl-flex social-icons astro-kmkmnagf"> <button class="openCPG">❮❯</button>  </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Farbschema wählen</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg>  <select value="auto" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dunkel</option><option value="light" class="astro-4yphtoen">Hell</option><option value="auto" selected="true" class="astro-4yphtoen">System</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div> </div> </header> <nav class="sidebar astro-vhvc56sb" aria-label="Hauptnavigation"> <starlight-menu-button class="astro-jif73yzw"> <button aria-expanded="false" aria-label="Menü" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jif73yzw"> <svg aria-hidden="true" class="astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg>  </button> </starlight-menu-button>    <div id="starlight__sidebar" class="sidebar-pane astro-vhvc56sb"> <div class="sidebar-content sl-flex astro-vhvc56sb"> <sl-sidebar-state-persist data-hash="0agrmsc" class="astro-ul5l7bp7"> <ul class="top-level astro-3ii7xxms"> <li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">HTML</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/GIS-WS24/html/basics" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Grundbegriffe</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/html/grundgeruest" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Grundgerüst</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/html/head" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Head</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/html/body" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Body</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/html/linksammlung" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Linksammlung</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">CSS</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/GIS-WS24/css/einbinden" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Einbinden</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/css/regeln" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Regeln festlegen</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/css/layout" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Layout und Positionierung</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/css/styling" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Styling und Typografie</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/css/fortgeschritten" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Fortgeschritten</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/css/design-fuer-alle" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Design für Alle</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/css/linksammlung" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Linksammlung</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">JavaScript</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/GIS-WS24/js/was-ist-js" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Was ist JavaScript?</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/js/einbinden" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Einbinden</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/js/basics" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Basics</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/js/funktionen" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Funktionen</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/js/objekte" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Objekte</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/js/fortgeschritten" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Fortgeschritten</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/js/linksammlung" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Linksammlung</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">DOM</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/GIS-WS24/dom/was-ist-dom" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Was ist der DOM?</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/dom/zugriff" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Zugriff auf Elemente</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/dom/manipulation" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Auslesen/Manipulieren</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/dom/events" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Events</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/dom/canvas" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Canvas</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/dom/linksammlung" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Linksammlung</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Daten im Browser</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/GIS-WS24/daten-im-browser/json" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">JSON</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/daten-im-browser/storage" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Browserspeicher</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/daten-im-browser/url-param" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">URL Parameter</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/daten-im-browser/linksammlung" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Linksammlung</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Server</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/GIS-WS24/server/server" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Webserver</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/server/client" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Clientseite</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/server/nodejs" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Node.js Server</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/GIS-WS24/server/linksammlung" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Linksammlung</span>  </a> </li> </ul>  </details> </li> </ul>  </sl-sidebar-state-persist> <div class="md:sl-hidden astro-ul5l7bp7"> <div class="mobile-preferences sl-flex astro-wu23bvmt"> <div class="sl-flex social-icons astro-wu23bvmt"> <button class="openCPG">❮❯</button>  </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Farbschema wählen</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg>  <select value="auto" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dunkel</option><option value="light" class="astro-4yphtoen">Hell</option><option value="auto" selected="true" class="astro-4yphtoen">System</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg>  </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div>  </div>  <script>
+	(() => {
+		try {
+			if (!matchMedia('(min-width: 50em)').matches) return;
+			const scroller = document.getElementById('starlight__sidebar');
+			/** @type {HTMLElement | null} */
+			const target = document.querySelector('sl-sidebar-state-persist');
+			const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+			if (!scroller || !target || !state || target.dataset.hash !== state.hash) return;
+			target
+				.querySelectorAll('details')
+				.forEach((el, idx) => typeof state.open[idx] === 'boolean' && (el.open = state.open[idx]));
+			scroller.scrollTop = state.scroll;
+		} catch {}
+	})();
+</script>  </div> </div> </nav> <div class="main-frame astro-vhvc56sb">   <div class="lg:sl-flex astro-67yu43on"> <aside class="right-sidebar-container astro-67yu43on"> <div class="right-sidebar astro-67yu43on"> <div class="lg:sl-hidden astro-pb3aqygn"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-doynk5tl"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-doynk5tl"><details id="starlight__mobile-toc" class="astro-doynk5tl"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-doynk5tl"><div class="toggle sl-flex astro-doynk5tl">Auf dieser Seite<svg aria-hidden="true" class="caret astro-doynk5tl astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </div><span class="display-current astro-doynk5tl"></span></summary><div class="dropdown astro-doynk5tl"><ul class="isMobile astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Überblick</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#datenbanken" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Datenbanken</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#crud-operationen" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">CRUD-Operationen</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#transaktionen" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Transaktionen</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#relationale-datenbanken" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Relationale Datenbanken</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#normalisierung" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Normalisierung</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#sql-basics" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">SQL Basics</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#sql-befehle" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">SQL Befehle</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#sqlite-einrichten" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">SQLite einrichten</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#beispiel-mit-sqlite" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Beispiel mit SQLite</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#sql-joins--view" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">SQL Joins + View</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#sqlite--nodejs" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">SQLite + Node.js</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#einrichten" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Einrichten</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#nodejs-beispiel" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Node.js Beispiel</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#footnote-label" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Footnotes</span> </a>  </li> </ul> </div></details></nav></mobile-starlight-toc></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-pb3aqygn"><div class="sl-container astro-pb3aqygn"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">Auf dieser Seite</h2><ul class="astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Überblick</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#datenbanken" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Datenbanken</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#crud-operationen" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">CRUD-Operationen</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#transaktionen" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Transaktionen</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#relationale-datenbanken" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Relationale Datenbanken</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#normalisierung" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Normalisierung</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#sql-basics" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">SQL Basics</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#sql-befehle" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">SQL Befehle</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#sqlite-einrichten" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">SQLite einrichten</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#beispiel-mit-sqlite" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Beispiel mit SQLite</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#sql-joins--view" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">SQL Joins + View</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#sqlite--nodejs" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">SQLite + Node.js</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#einrichten" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Einrichten</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#nodejs-beispiel" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Node.js Beispiel</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#footnote-label" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Footnotes</span> </a>  </li> </ul> </nav></starlight-toc></div></div> </div> </aside> <div class="main-pane astro-67yu43on">  <main data-pagefind-body lang="de" dir="ltr" class="astro-bguv2lll">    <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <h1 id="_top" class="astro-j6tvhyss">Relationale Datenbanken</h1>  </div> </div>  <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <div class="sl-markdown-content"> <h2 id="datenbanken">Datenbanken</h2>
+<p>Datenbanken sind strukturierte Systeme zur Verwaltung von Daten. Sie ermöglichen effizienten Zugriff, Speicherung und Manipulation großer Datenmengen.</p>
+<h5 id="anforderungen-an-datenbanken">Anforderungen an Datenbanken</h5>
+<p>Typische Anforderungen an moderne Datenbanken umfassen:</p>
+<ul>
+<li><strong>Verarbeitung großer Datenmengen</strong>: Optimale Verwaltung und Skalierung.</li>
+<li><strong>Schneller Zugriff</strong>: Minimale Latenzzeiten bei Abfragen.</li>
+<li><strong>Paralleler Zugriff</strong>: Unterstützung mehrerer gleichzeitiger Benutzer.</li>
+<li><strong>Konsistenz</strong>: Sicherstellung der Datenintegrität (= Korrektheit der Daten).</li>
+<li><strong>Sicherheit</strong>: Schutz vor unbefugtem Zugriff und Datenverlust.</li>
+</ul>
+<h5 id="datenbankmanagementsystem-dbms">Datenbankmanagementsystem (DBMS)</h5>
+<p>Ein Datenbankmanagementsystem (DBMS) ist Software, die die Verwaltung und den Zugriff auf Daten in einer Datenbank steuert.</p>
+<h3 id="crud-operationen">CRUD-Operationen</h3>
+<p>Persistente (dauerhafte) Speicher bieten meist vier grundlegende Operationen zur Verwaltung der gespeicherten Daten:</p>
+<ul>
+<li><strong>Create (Erstellen)</strong>: Hinzufügen neuer Datensätze.</li>
+<li><strong>Read (Lesen)</strong>: Abrufen von Datensätzen.</li>
+<li><strong>Update (Bearbeiten)</strong>: Ändern bestehender Daten.</li>
+<li><strong>Delete (Löschen)</strong>: Entfernen von Datensätzen.</li>
+</ul>
+<p>Entsprechend der Anfangsbuchstaben werden diese Operationen als CRUD abgekürzt.</p>
+<h3 id="transaktionen">Transaktionen</h3>
+<p>Eine Transaktion besteht aus einer oder mehreren logisch zusammengehörigen Operationen, die als Einheit ausgeführt werden sollen.</p>
+<p>Beispiel: Geldüberweisung - Abbuchung von Konto A und Gutschrift auf Konto B.</p>
+<ul>
+<li>Update Operation: Geld auf Konto A um Überweisungsbetrag reduzieren</li>
+<li>Update Operation: Geld auf Konto B um Überweisungsbetrag erhöhen</li>
+</ul>
+<p>Kommt es zu Fehlern bei einer Operation, wird die Transaktion insgesamt wieder rückgängig gemacht und der ursprüngliche Zustand wiederhergestellt.</p>
+<h5 id="acid-eigenschaften">ACID Eigenschaften</h5>
+<ul>
+<li><strong>Atomicity</strong> = Atomarität (Ganz oder Garnicht)
+<ul>
+<li>Alle Operationen einer Transaktion werden vollständig ausgeführt oder rückgängig gemacht (Rollback).</li>
+<li>Beispiel: Geld, dass von Konto A abgebucht wird, kommt auch sicher auf Konto B an (oder wird nicht abgebucht).</li>
+</ul>
+</li>
+<li><strong>Consistency</strong> = Konsistenz (Daten bleiben korrekt)
+<ul>
+<li>Nach einer Transaktion müssen die Daten immer in einem gültigen Zustand sein, der festgelegten Regeln entspricht.</li>
+<li>Beispiel: Konto wird nicht überzogen, falls dies nicht erlaubt war.</li>
+</ul>
+</li>
+<li><strong>Isolation</strong> = Isolation (Unabhängigkeit)
+<ul>
+<li>Parallel ausgeführte Transaktionen beeinflussen sich nicht gegenseitig. Sie müssen zu dem gleichen Ergebnis führen, als wären sie nacheinander ausgeführt worden.</li>
+<li>Beispiel: Zwei Benutzer buchen einen Kinoplatz. Es muss sichergestellt sein, dass der gleiche Platz nicht mehrfach vergeben wird.</li>
+</ul>
+</li>
+<li><strong>Durability</strong> = Dauerhaftigkeit (Nichts geht verloren)
+<ul>
+<li>Erfolgreich abgeschlossene Transaktionen bleiben dauerhaft gespeichert, auch bei Systemausfällen.</li>
+<li>Beispiel: Eine Bestellung bleibt nach Abschluss sicher erhalten.</li>
+</ul>
+</li>
+</ul>
+<h2 id="relationale-datenbanken">Relationale Datenbanken</h2>
+<h5 id="grundlagen">Grundlagen</h5>
+<p>Relationale Datenbanken strukturieren Daten in Tabellen. Jede Tabelle besteht aus:</p>
+<ul>
+<li><strong>Zeilen (Rows)</strong>: Einzelner Eintrag eines Datensatzes.</li>
+<li><strong>Spalten (Columns)</strong>: Eigenschaften, die für jeden Eintrag gespeichert werden sollen.</li>
+<li><strong>Primärschlüssel (Primary Key)</strong>: Um auf einzelne Einträge zugreifen zu können, muss es eine eindeutige Kennung geben. Dies kann eine einzelne Eigenschaft, oft eine fortlaufende ID, oder eine Kombination aus Eigenschaften sein.</li>
+<li><strong>Fremdschlüssel (Foreign Key)</strong>: Tabellen können über den Primärschlüssel miteinander verbunden sein. Der Primärschlüssel wird dazu als Eigenschaft in eine anderen Tabelle eingefügt.</li>
+</ul>
+<h5 id="beispieltabellen-primärschlüssel-unterstrichen">Beispieltabellen (Primärschlüssel unterstrichen):</h5>
+<div class="sqlTableLayout astro-2ef2knxv"> <p class="tableTitle astro-2ef2knxv">Student</p> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><u>MatrikelNr</u></th><th>Vorname</th><th>Nachname</th><th>Studiengang</th><th>Semester</th></tr></thead><tbody><tr><td>123456</td><td>Klaus</td><td>Meng</td><td>2</td><td>2</td></tr><tr><td>234567</td><td>Verena</td><td>Rist</td><td>1</td><td>6</td></tr></tbody></table> </div>
+<div class="sqlTableLayout astro-2ef2knxv"> <p class="tableTitle astro-2ef2knxv">Veranstaltung</p> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><u>ID</u></th><th>Name</th><th>Fakultät</th></tr></thead><tbody><tr><td>1</td><td>C#</td><td>2</td></tr><tr><td>2</td><td>Zeichnen</td><td>1</td></tr></tbody></table> </div>
+<div class="sqlTableLayout astro-2ef2knxv"> <p class="tableTitle astro-2ef2knxv">Studiengang</p> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><u>ID</u></th><th>Name</th><th>Fakultät</th></tr></thead><tbody><tr><td>1</td><td>MIB</td><td>1</td></tr><tr><td>2</td><td>OMB</td><td>1</td></tr><tr><td>3</td><td>MKB</td><td>1</td></tr></tbody></table> </div>
+<div class="sqlTableLayout astro-2ef2knxv"> <p class="tableTitle astro-2ef2knxv">Fakultät</p> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><u>ID</u></th><th>Name</th></tr></thead><tbody><tr><td>1</td><td>DM</td></tr><tr><td>2</td><td>IN</td></tr></tbody></table> </div>
+<div class="sqlTableLayout astro-2ef2knxv"> <p class="tableTitle astro-2ef2knxv">Belegung</p> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><u>Student</u></th><th><u>Veranstaltung</u></th></tr></thead><tbody><tr><td>123456</td><td>1</td></tr><tr><td>123456</td><td>2</td></tr></tbody></table> </div>
+<h3 id="normalisierung">Normalisierung</h3>
+<p>Normalisierung reduziert Redundanzen. Wenn der gleiche Wert nicht mehrfach gespeichert wird, verhindert dies ungleiche Angaben zur gleichen Information also Inkonsistenzen.</p>
+<p>Beispiel: DM steht in der nachfolgenden Tabelle mehrfach und könnte an einer Stelle als Abkürzung “DM” und an einer anderen ausgeschrieben “Digitale Medien” eingetragen sein.</p>
+<p>Die ersten drei von fünf Stufen der Normalisierung umfassen:</p>
+<ol>
+<li>Normalform:
+<ul>
+<li>Spalten enthalten nur Einzelwerte.</li>
+<li>Beispiel: Name in Vorname, Nachname aufteilen</li>
+</ul>
+</li>
+<li>Normalform:
+<ul>
+<li>Tabelle bildet nur einen Sachverhalt ab.</li>
+<li>Alle Eigenschaften hängen vollständig vom Primärschlüssel ab.</li>
+<li>Beispiel: Student und Veranstaltung in getrennte Tabellen, da die Veranstaltung nicht von der Matrikelnummer abhängt</li>
+</ul>
+</li>
+<li>Normalform:
+<ul>
+<li>Tabellen sollen nur direkte Abhängigkeiten beinhalten.</li>
+<li>Nichtschlüssel-Eigenschaften dürfen nicht voneinander abhängig sein.</li>
+<li>Beispiel: Studiengang und Fakultät sind voneinander abhängig und sollen in eigene Tabellen. MatrikelNr -&gt; Studiengang und Studiengang -&gt; Fakultät<sup><a href="#user-content-fn-transitiveabh" id="user-content-fnref-transitiveabh" data-footnote-ref="" aria-describedby="footnote-label" target="_blank"> 1 </a></sup></li>
+</ul>
+</li>
+</ol>
+<h5 id="nicht-normalisierte-tabelle">Nicht normalisierte Tabelle:</h5>
+<div class="sqlTableLayout astro-2ef2knxv"> <p class="tableTitle astro-2ef2knxv">Student</p> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><u>MatrikelNr</u></th><th>Name</th><th>Studiengang</th><th>Fakultät</th><th>Semester</th><th><u>VeranstId</u></th><th>VeranstName</th><th>VeranstFakultät</th></tr></thead><tbody><tr><td>123456</td><td>Klaus Meng</td><td>OMB</td><td>DM</td><td>2</td><td>1</td><td>C#</td><td>IN</td></tr><tr><td>123456</td><td>Klaus Meng</td><td>OMB</td><td>DM</td><td>2</td><td>2</td><td>Zeichnen</td><td>DM</td></tr><tr><td>234567</td><td>Verena Rist</td><td>MIB</td><td>DM</td><td>6</td><td></td><td></td><td></td></tr></tbody></table> </div>
+<h2 id="sql-basics">SQL Basics</h2>
+<p>SQL (Structured Query Language = Strukturierte Abfrage Sprache) ist eine Sprache, die zur Verwaltung relationaler Datenbanken verwendet wird.</p>
+<h5 id="datenbankmanagementsystem-für-relationale-datenbanken">Datenbankmanagementsystem für Relationale Datenbanken</h5>
+<p>Bekannte Opensource DBMS:</p>
+<ul>
+<li><a href="https://www.mysql.com/de/" target="_blank"> MySQL </a></li>
+<li><a href="https://mariadb.org/" target="_blank"> MariaDB </a></li>
+</ul>
+<p>Für Prototypen und zum Testen:</p>
+<ul>
+<li><a href="https://www.sqlite.org/" target="_blank"> SQLite </a></li>
+</ul>
+<h3 id="sql-befehle">SQL Befehle</h3>
+<starlight-tabs class="astro-esqgolmp"> <div class="tablist-wrapper not-content astro-esqgolmp"> <ul role="tablist" class="astro-esqgolmp"> <li role="presentation" class="tab astro-esqgolmp"> <a role="tab" href="#tab-panel-0" id="tab-0" aria-selected="true" tabindex="0" class="astro-esqgolmp">  Essentials </a> </li><li role="presentation" class="tab astro-esqgolmp"> <a role="tab" href="#tab-panel-1" id="tab-1" aria-selected="false" tabindex="-1" class="astro-esqgolmp">  Erweitert </a> </li> </ul> </div> <section id="tab-panel-0" aria-labelledby="tab-0" role="tabpanel" tabindex="0"> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>SQL Befehl</th><th>Beschreibung</th></tr></thead><tbody><tr><td>CREATE TABLE table_name</td><td>Tabelle anlegen (leere neu anlegen, oder aus existierenden Daten)</td></tr><tr><td>INSERT INTO table_name VALUES (wert1, wert2, …)</td><td>Neuen Eintrag in Tabelle</td></tr><tr><td>SELECT spalten FROM table_name</td><td>einzelne Spalten auswählen (* für alle)</td></tr><tr><td>SELECT spalten FROM table_name WHERE spalte=wert</td><td>Auswahl filtern (mehrere Bedingungen mit AND und OR verknüpfen)</td></tr><tr><td>UPDATE table_name SET spalte=wert WHERE spalte=wert</td><td>Eintrag in Tabelle ändern</td></tr><tr><td>DELETE FROM table_name WHERE spalte=wert</td><td>Eintrag aus Tabelle löschen</td></tr></tbody></table> </section><section id="tab-panel-1" aria-labelledby="tab-1" role="tabpanel" tabindex="0" hidden> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>SQL Befehl</th><th>Beschreibung</th></tr></thead><tbody><tr><td>CREATE DATABASE db_name</td><td>Datenbank anlegen</td></tr><tr><td>DROP DATABASE db_name</td><td>Datenbank löschen</td></tr><tr><td>CREATE TABLE table_name</td><td>Tabelle anlegen (leere neu anlegen, oder aus existierenden Daten)</td></tr><tr><td>ALTER TABLE table_name</td><td>Tabelle nachträglich verändern (Spalten hinzufügen, löschen, umbenennen)</td></tr><tr><td>DROP TABLE table_name</td><td>Tabelle löschen</td></tr><tr><td>INSERT INTO table_name VALUES (wert1, wert2, …)</td><td>Neuen Eintrag in Tabelle</td></tr><tr><td>SELECT spalten FROM table_name</td><td>einzelne Spalten auswählen (* für alle)</td></tr><tr><td>SELECT spalten FROM table_name WHERE spalte=wert</td><td>Auswahl filtern (mehrere Bedingungen mit AND und OR verknüpfen)</td></tr><tr><td>SELECT spalten FROM table_name ORDER BY spalte</td><td>Auswahl sortieren</td></tr><tr><td>UPDATE table_name SET spalte=wert WHERE spalte=wert</td><td>Eintrag in Tabelle ändern</td></tr><tr><td>DELETE FROM table_name WHERE spalte=wert</td><td>Eintrag aus Tabelle löschen</td></tr></tbody></table> </section>  </starlight-tabs>  
+<p><a href="https://www.w3schools.com/sql/sql_intro.asp" target="_blank"> weitere </a></p>
+<h3 id="sqlite-einrichten">SQLite einrichten</h3>
+<p>Eine SQLite Datenbank besteht aus einer einzelnen Datei:</p>
+<ul>
+<li>Im Projektordner eine Datei namens “dbName.db” anlegen (passenden Datenbanknamen wählen)</li>
+<li>SQLite Plugin in VSCode installieren
+<ul>
+<li>SQLite Datei im Projekt auswählen zum anzeigen</li>
+<li>Show and Run Commands -&gt; <code dir="auto">CTRL</code> + <code dir="auto">SHIFT</code> + <code dir="auto">P</code></li>
+<li><code dir="auto">SQLite: New Query</code> -&gt; SQL Befehle eingeben</li>
+<li><code dir="auto">SQLite: Run Query</code> -&gt; SQLite Datei auswählen -&gt; führt SQL Befehle aus und zeigt Ergebnis an</li>
+</ul>
+</li>
+<li>Optional: <a href="https://sqlitebrowser.org/" target="_blank"> DB Browser for SQLite </a> herunterladen
+<ul>
+<li>SQLite Datei öffnen zum betrachten</li>
+<li>Execute SQL Tab um SQL Befehle einzugeben und auszuführen</li>
+</ul>
+</li>
+</ul>
+<h3 id="beispiel-mit-sqlite">Beispiel mit SQLite</h3>
+<starlight-tabs class="astro-esqgolmp"> <div class="tablist-wrapper not-content astro-esqgolmp"> <ul role="tablist" class="astro-esqgolmp"> <li role="presentation" class="tab astro-esqgolmp"> <a role="tab" href="#tab-panel-6" id="tab-6" aria-selected="true" tabindex="0" class="astro-esqgolmp">  Fertige SQLite Datei </a> </li><li role="presentation" class="tab astro-esqgolmp"> <a role="tab" href="#tab-panel-7" id="tab-7" aria-selected="false" tabindex="-1" class="astro-esqgolmp">  SQLite Datei selbst erstellen </a> </li> </ul> </div> <section id="tab-panel-6" aria-labelledby="tab-6" role="tabpanel"> <p><a href="https://heintz-s.github.io/GIS-WS24/hochschule.db" download="true">hochschule.db</a> (SQLite Datenbank-Datei mit Beispieldaten)</p> </section><section id="tab-panel-7" aria-labelledby="tab-7" role="tabpanel" hidden> <p>Es kann auch eine SQLite Datenbank Datei angelegt und diese selbst befüllt werden, nach folgendem Schema:</p><div class="expressive-code"><link rel="stylesheet" href="/GIS-WS24/_astro/ec.j8ofn.css"><script type="module" src="/GIS-WS24/_astro/ec.8zarh.js"></script><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code="" data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">CREATE</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">TABLE</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">table_name</span><span style="--0:#D6DEEB;--1:#403F53"> (</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">column1 datatype </span><span style="--0:#C792EA;--1:#8D46B4">constraint</span><span style="--0:#D6DEEB;--1:#403F53">,</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">column2 datatype </span><span style="--0:#C792EA;--1:#8D46B4">constraint</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">...</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="CREATE TABLE table_name (column1 datatype constraint,column2 datatype constraint...)"><div></div></button></div></figure></div><ul>
+<li><a href="https://www.w3schools.com/sql/sql_datatypes.asp" target="_blank"> Data Types </a></li>
+<li><a href="https://www.w3schools.com/sql/sql_constraints.asp" target="_blank"> Constraints </a>:
+<ul>
+<li>NOT NULL = muss Wert haben</li>
+<li>UNIQUE = muss einmalig sein</li>
+<li>PRIMARY KEY = NOT NULL + UNIQUE</li>
+<li>FOREIGN KEY = Verknüpfung zu PRIMARY KEY von anderer Tabelle</li>
+</ul>
+</li>
+</ul><p>Zum Beispiel für die Studenten Tabelle</p><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code="" data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">CREATE</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">TABLE</span><span style="--0:#D6DEEB;--1:#403F53"> "</span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">" (</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">studentNr</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">INTEGER</span><span style="--0:#D6DEEB;--1:#403F53">,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">firstName</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">TEXT</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">NOT NULL</span><span style="--0:#D6DEEB;--1:#403F53">,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">lastName</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">TEXT</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">NOT NULL</span><span style="--0:#D6DEEB;--1:#403F53">,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">course</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">INTEGER</span><span style="--0:#D6DEEB;--1:#403F53">,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">semester</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">INTEGER</span><span style="--0:#D6DEEB;--1:#403F53">,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#C792EA;--1:#8D46B4">PRIMARY KEY</span><span style="--0:#D6DEEB;--1:#403F53"> (</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">studentNr</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">),</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#C792EA;--1:#8D46B4">FOREIGN KEY</span><span style="--0:#D6DEEB;--1:#403F53"> (</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">course</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">) </span><span style="--0:#C792EA;--1:#8D46B4">REFERENCES</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">course</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> (</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">id</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="CREATE TABLE &#x22;student&#x22; (  &#x22;studentNr&#x22; INTEGER,  &#x22;firstName&#x22; TEXT NOT NULL,  &#x22;lastName&#x22; TEXT NOT NULL,  &#x22;course&#x22; INTEGER,  &#x22;semester&#x22; INTEGER,  PRIMARY KEY (&#x22;studentNr&#x22;),  FOREIGN KEY (&#x22;course&#x22;) REFERENCES &#x22;course&#x22; (&#x22;id&#x22;))"><div></div></button></div></figure></div><p>Anmerkung: Der Foreign Key verweist auf die Tabelle “course” mit der Primärschlüssel-Spalte “id”.</p><p>Datensätze in Tabelle einfügen</p><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code="" data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">INSERT INTO</span><span style="--0:#D6DEEB;--1:#403F53"> student </span><span style="--0:#C792EA;--1:#8D46B4">VALUES</span><span style="--0:#D6DEEB;--1:#403F53"> (</span><span style="--0:#F78C6C;--1:#AA0982">123</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">Klaus</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">Meng</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">OMB</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#F78C6C;--1:#AA0982">2</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">INSERT INTO</span><span style="--0:#D6DEEB;--1:#403F53"> student </span><span style="--0:#C792EA;--1:#8D46B4">VALUES</span><span style="--0:#D6DEEB;--1:#403F53"> (</span><span style="--0:#F78C6C;--1:#AA0982">456</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">Verena</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">Rist</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">MIB</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#F78C6C;--1:#AA0982">6</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">INSERT INTO</span><span style="--0:#D6DEEB;--1:#403F53"> student </span><span style="--0:#C792EA;--1:#8D46B4">VALUES</span><span style="--0:#D6DEEB;--1:#403F53"> (</span><span style="--0:#F78C6C;--1:#AA0982">789</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">Samantha</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">Holz</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">OMB</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#F78C6C;--1:#AA0982">1</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="INSERT INTO student VALUES (123, &#x22;Klaus&#x22;, &#x22;Meng&#x22;, &#x22;OMB&#x22;, 2);INSERT INTO student VALUES (456, &#x22;Verena&#x22;, &#x22;Rist&#x22;, &#x22;MIB&#x22;, 6);INSERT INTO student VALUES (789, &#x22;Samantha&#x22;, &#x22;Holz&#x22;, &#x22;OMB&#x22;, 1);"><div></div></button></div></figure></div> </section>  </starlight-tabs>  
+<h5 id="beispiele-zum-zugriff-auf-und-zur-manipulation-der-daten">Beispiele zum Zugriff auf und zur Manipulation der Daten</h5>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">SELECT</span><span style="--0:#D6DEEB;--1:#403F53"> lastName </span><span style="--0:#C792EA;--1:#8D46B4">FROM</span><span style="--0:#D6DEEB;--1:#403F53"> student;</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="SELECT lastName FROM student;"><div></div></button></div></figure></div>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">SELECT</span><span style="--0:#D6DEEB;--1:#403F53"> firstName, lastName </span><span style="--0:#C792EA;--1:#8D46B4">FROM</span><span style="--0:#D6DEEB;--1:#403F53"> student </span><span style="--0:#C792EA;--1:#8D46B4">WHERE</span><span style="--0:#D6DEEB;--1:#403F53"> course</span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">OMB</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="SELECT firstName, lastName FROM student WHERE course=&#x22;OMB&#x22;;"><div></div></button></div></figure></div>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">SELECT</span><span style="--0:#D6DEEB;--1:#403F53"> firstName, lastName </span><span style="--0:#C792EA;--1:#8D46B4">FROM</span><span style="--0:#D6DEEB;--1:#403F53"> student </span><span style="--0:#C792EA;--1:#8D46B4">WHERE</span><span style="--0:#D6DEEB;--1:#403F53"> course</span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">OMB</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">ORDER BY</span><span style="--0:#D6DEEB;--1:#403F53"> lastName;</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="SELECT firstName, lastName FROM student WHERE course=&#x22;OMB&#x22; ORDER BY lastName;"><div></div></button></div></figure></div>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">UPDATE</span><span style="--0:#D6DEEB;--1:#403F53"> student </span><span style="--0:#C792EA;--1:#8D46B4">SET</span><span style="--0:#D6DEEB;--1:#403F53"> semester</span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#F78C6C;--1:#AA0982">3</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">WHERE</span><span style="--0:#D6DEEB;--1:#403F53"> studentNr</span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#F78C6C;--1:#AA0982">123</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="UPDATE student SET semester=3 WHERE studentNr=123;"><div></div></button></div></figure></div>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">DELETE</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">FROM</span><span style="--0:#D6DEEB;--1:#403F53"> student </span><span style="--0:#C792EA;--1:#8D46B4">WHERE</span><span style="--0:#D6DEEB;--1:#403F53"> studentNr</span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#F78C6C;--1:#AA0982">789</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="DELETE FROM student WHERE studentNr=789;"><div></div></button></div></figure></div>
+<h3 id="sql-joins--view">SQL Joins + View</h3>
+<ul>
+<li>Datensätze wurden für die Normalisierung auf mehrere Tabellen aufgeteilt</li>
+<li>Mit <strong>Joins</strong> können diese zum Auslesen der Daten wieder zu einer Tabelle zusammengeführt werden</li>
+<li>Ergebnis kann als virtuelle Tabelle gespeichert werden <strong>(View)</strong></li>
+</ul>
+<h5 id="joins">Joins</h5>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Typ</th><th>Funktion</th></tr></thead><tbody><tr><td>INNER JOIN</td><td>Schnittmenge (nur die Einträge, für die es einen Eintrag in der gejointen Tabelle gibt)</td></tr><tr><td>LEFT JOIN</td><td>Tabelle + Schnittmenge (alle Einträge der Tabelle + soweit vorhanden dazu passende Einträge der gejointen Tabelle)</td></tr></tbody></table>
+<p><a href="https://www.w3schools.com/sql/sql_join.asp" target="_blank"> gibt noch weitere </a></p>
+<h5 id="view">View</h5>
+<ul>
+<li>Virtuelle Tabelle mit zusammengeführten Daten aus bestehenden Tabellen</li>
+<li>z. B. Erzeugung von Datensätzen passend für Anzeige in Anwendung</li>
+<li>Befehl: <code dir="auto">CREATE VIEW view_name AS</code> + Daten (z. B. durch SELECT ausgewählt)</li>
+</ul>
+<h5 id="beispiele">Beispiele</h5>
+<starlight-tabs class="astro-esqgolmp"> <div class="tablist-wrapper not-content astro-esqgolmp"> <ul role="tablist" class="astro-esqgolmp"> <li role="presentation" class="tab astro-esqgolmp"> <a role="tab" href="#tab-panel-2" id="tab-2" aria-selected="true" tabindex="0" class="astro-esqgolmp">  INNER JOIN </a> </li><li role="presentation" class="tab astro-esqgolmp"> <a role="tab" href="#tab-panel-3" id="tab-3" aria-selected="false" tabindex="-1" class="astro-esqgolmp">  LEFT JOIN </a> </li><li role="presentation" class="tab astro-esqgolmp"> <a role="tab" href="#tab-panel-4" id="tab-4" aria-selected="false" tabindex="-1" class="astro-esqgolmp">  verschachtelter JOIN </a> </li><li role="presentation" class="tab astro-esqgolmp"> <a role="tab" href="#tab-panel-5" id="tab-5" aria-selected="false" tabindex="-1" class="astro-esqgolmp">  VIEW </a> </li> </ul> </div> <section id="tab-panel-2" aria-labelledby="tab-2" role="tabpanel"> <div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code="" data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">SELECT</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#7FDBCA;--1:#097174">*</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">FROM</span><span style="--0:#D6DEEB;--1:#403F53"> student</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">INNER JOIN</span><span style="--0:#D6DEEB;--1:#403F53"> course </span><span style="--0:#C792EA;--1:#8D46B4">ON</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">id</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="SELECT *FROM studentINNER JOIN course ON student.course = course.id;"><div></div></button></div></figure></div><p>gleiches Ergebnis:</p><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code="" data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">SELECT</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#7FDBCA;--1:#097174">*</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">FROM</span><span style="--0:#D6DEEB;--1:#403F53"> course</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">INNER JOIN</span><span style="--0:#D6DEEB;--1:#403F53"> student </span><span style="--0:#C792EA;--1:#8D46B4">ON</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">id</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="SELECT *FROM courseINNER JOIN student ON student.course = course.id;"><div></div></button></div></figure></div> </section><section id="tab-panel-3" aria-labelledby="tab-3" role="tabpanel" hidden> <div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code="" data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">SELECT</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#7FDBCA;--1:#097174">*</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">FROM</span><span style="--0:#D6DEEB;--1:#403F53"> course</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">LEFT JOIN</span><span style="--0:#D6DEEB;--1:#403F53"> student </span><span style="--0:#C792EA;--1:#8D46B4">ON</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">id</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="SELECT *FROM courseLEFT JOIN student ON student.course = course.id;"><div></div></button></div></figure></div> </section><section id="tab-panel-4" aria-labelledby="tab-4" role="tabpanel" hidden> <div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code="" data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">SELECT</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">studentNr</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">firstName</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">lastName</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">name</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">AS</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">course</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#82AAFF;--1:#3C63B3">faculty</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">name</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">AS</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">faculty</span><span style="--0:#D9F5DD;--1:#111111">"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">FROM</span><span style="--0:#D6DEEB;--1:#403F53"> (student</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">INNER JOIN</span><span style="--0:#D6DEEB;--1:#403F53"> course </span><span style="--0:#C792EA;--1:#8D46B4">ON</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">id</span><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">INNER JOIN</span><span style="--0:#D6DEEB;--1:#403F53"> faculty </span><span style="--0:#C792EA;--1:#8D46B4">ON</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">faculty</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">faculty</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">id</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="SELECT student.studentNr, student.firstName, student.lastName, course.name AS &#x22;course&#x22;, faculty.name AS &#x22;faculty&#x22;FROM (studentINNER JOIN course ON student.course = course.id)INNER JOIN faculty ON course.faculty = faculty.id;"><div></div></button></div></figure></div> </section><section id="tab-panel-5" aria-labelledby="tab-5" role="tabpanel" hidden> <div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code="" data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">CREATE</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">VIEW</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">student_data</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">AS</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">SELECT</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">studentNr</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">firstName</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">lastName</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">name</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">AS</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">course</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#82AAFF;--1:#3C63B3">faculty</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">name</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">AS</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#9B504E">faculty</span><span style="--0:#D9F5DD;--1:#111111">"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">FROM</span><span style="--0:#D6DEEB;--1:#403F53"> (student</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">INNER JOIN</span><span style="--0:#D6DEEB;--1:#403F53"> course </span><span style="--0:#C792EA;--1:#8D46B4">ON</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">id</span><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">INNER JOIN</span><span style="--0:#D6DEEB;--1:#403F53"> faculty </span><span style="--0:#C792EA;--1:#8D46B4">ON</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">course</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">faculty</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">faculty</span><span style="--0:#D6DEEB;--1:#403F53">.</span><span style="--0:#82AAFF;--1:#3C63B3">id</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="CREATE VIEW student_data ASSELECT student.studentNr, student.firstName, student.lastName, course.name AS &#x22;course&#x22;, faculty.name AS &#x22;faculty&#x22;FROM (studentINNER JOIN course ON student.course = course.id)INNER JOIN faculty ON course.faculty = faculty.id;"><div></div></button></div></figure></div><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code="" data-code-type="SQL" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">SQL</span> <pre data-language="sql">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">SELECT</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#7FDBCA;--1:#097174">*</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">FROM</span><span style="--0:#D6DEEB;--1:#403F53"> student_data</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="SELECT * FROM student_data"><div></div></button></div></figure></div> </section>  </starlight-tabs>  
+<h2 id="sqlite--nodejs">SQLite + Node.js</h2>
+<h3 id="einrichten">Einrichten</h3>
+<p>SQLite Module für Node.js installieren (in Projektordner):</p>
+<p>Es gibt <a href="https://npm-compare.com/de-DE/better-sqlite3,sequelize,sqlite,sqlite3" target="_blank"> verschiedene NPM Pakete </a> für Node.js, um mit SQLite zu arbeiten. Für einen einfachen Einstieg wird []<code dir="auto">sqlite</code>](<a href="https://www.npmjs.com/package/sqlite" target="_blank"> https://www.npmjs.com/package/sqlite </a>) in Kombination mit <code dir="auto">sqlite3</code> empfohlen.</p>
+<p>Im Terminal folgende Befehle für den Projektordner ausführen (Rechtsklick auf Projektordner -> Open in Integrated Terminal):</p>
+<ul>
+<li><code dir="auto">npm install sqlite3</code></li>
+<li><code dir="auto">npm install sqlite</code></li>
+</ul>
+<h3 id="nodejs-beispiel">Node.js Beispiel</h3>
+<p><a href="https://heintz-s.github.io/GIS/hochschule.db" download="true">hochschule.db</a> Datei in Projektordner legen</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code data-code-type="Code" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">Code</span> <pre data-language="javascript">    <code><div class="ec-line"><div class="code"><span style="--0:#809191;--1:#5E6578">// SQLite Modul in Node.js Code verwenden</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">const </span><span style="--0:#82AAFF;--1:#3C63B3">sqlite3</span><span style="--0:#C792EA;--1:#8D46B4"> = </span><span style="--0:#82AAFF;--1:#3C63B3">require</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">sqlite3</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">const </span><span style="--0:#82AAFF;--1:#3C63B3">sqlite</span><span style="--0:#C792EA;--1:#8D46B4"> = </span><span style="--0:#82AAFF;--1:#3C63B3">require</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">sqlite</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#809191;--1:#5E6578">// SQLite Datei angeben</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">const </span><span style="--0:#82AAFF;--1:#3C63B3">dbFilePath</span><span style="--0:#C792EA;--1:#8D46B4"> = </span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">hochschule.db</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">;</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">async</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8D46B4">function</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#82AAFF;--1:#3C63B3">main</span><span style="--0:#D9F5DD;--1:#111111">()</span><span style="--0:#D6DEEB;--1:#403F53"> {</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#809191;--1:#5E6578">// Mit Datenbank verbinden</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#C792EA;--1:#8D46B4">const </span><span style="--0:#82AAFF;--1:#3C63B3">db</span><span style="--0:#C792EA;--1:#8D46B4"> = await </span><span style="--0:#7FDBCA;--1:#097174">sqlite</span><span style="--0:#C792EA;--1:#8D46B4">.</span><span style="--0:#82AAFF;--1:#3C63B3">open</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#C792EA;--1:#8D46B4">{</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#C792EA;--1:#8D46B4">    </span></span><span style="--0:#C792EA;--1:#8D46B4">filename: </span><span style="--0:#D7DBE0;--1:#403F53">dbFilePath</span><span style="--0:#7690A6;--1:#4F687D">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#C792EA;--1:#8D46B4">    </span></span><span style="--0:#C792EA;--1:#8D46B4">driver: </span><span style="--0:#7FDBCA;--1:#097174">sqlite3</span><span style="--0:#C792EA;--1:#8D46B4">.</span><span style="--0:#7FDBCA;--1:#097174">Database</span><span style="--0:#7690A6;--1:#4F687D">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#C792EA;--1:#8D46B4">  </span></span><span style="--0:#C792EA;--1:#8D46B4">}</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#809191;--1:#5E6578">// Auf Datenbank zugreifen (z. B. SELECT Befehl)</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#C792EA;--1:#8D46B4">const </span><span style="--0:#82AAFF;--1:#3C63B3">students</span><span style="--0:#C792EA;--1:#8D46B4"> = await </span><span style="--0:#7FDBCA;--1:#097174">db</span><span style="--0:#C792EA;--1:#8D46B4">.</span><span style="--0:#82AAFF;--1:#3C63B3">all</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">SELECT * FROM student</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#7FDBCA;--1:#097174">console</span><span style="--0:#C792EA;--1:#8D46B4">.</span><span style="--0:#82AAFF;--1:#3C63B3">log</span><span style="--1:#403F53"><span style="--0:#D6DEEB">(</span><span style="--0:#D7DBE0">students</span><span style="--0:#D6DEEB">);</span></span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#809191;--1:#5E6578">// Verbindung zu Datenbank beenden</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#C792EA;--1:#8D46B4">await</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#7FDBCA;--1:#097174">db</span><span style="--0:#C792EA;--1:#8D46B4">.</span><span style="--0:#82AAFF;--1:#3C63B3">close</span><span style="--0:#D6DEEB;--1:#403F53">();</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">}</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#82AAFF;--1:#3C63B3">main</span><span style="--0:#D6DEEB;--1:#403F53">();</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="// SQLite Modul in Node.js Code verwendenconst sqlite3 = require(&#x27;sqlite3&#x27;);const sqlite = require(&#x27;sqlite&#x27;);// SQLite Datei angebenconst dbFilePath = &#x27;hochschule.db&#x27;;async function main() {  // Mit Datenbank verbinden  const db = await sqlite.open({    filename: dbFilePath,    driver: sqlite3.Database,  });  // Auf Datenbank zugreifen (z. B. SELECT Befehl)  const students = await db.all(&#x27;SELECT * FROM student&#x27;);  console.log(students);  // Verbindung zu Datenbank beenden  await db.close();}main();"><div></div></button></div></figure></div>
+<h5 id="auf-datenbank-zugreifen">Auf Datenbank zugreifen</h5>
+<ul>
+<li>verschiedene db Funktionen für das Tabellen anlegen (db.exec), Einträge auslesen (db.all oder db.get) und Einträge bearbeiten (db.run)</li>
+<li><a href="https://www.npmjs.com/package/sqlite" target="_blank"> weitere Informationen </a></li>
+</ul>
+<p>Tabelle anlegen:</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code data-code-type="Code" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">Code</span> <pre data-language="javascript">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">await</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#7FDBCA;--1:#097174">db</span><span style="--0:#C792EA;--1:#8D46B4">.</span><span style="--0:#82AAFF;--1:#3C63B3">exec</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">CREATE TABLE student (studentNr INTEGER, firstName TEXT, lastName TEXT, course TEXT, semester INTEGER)</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">await</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#7FDBCA;--1:#097174">db</span><span style="--0:#C792EA;--1:#8D46B4">.</span><span style="--0:#82AAFF;--1:#3C63B3">exec</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">INSERT INTO student VALUES (123, "Klaus", "Meng", "OMB", 2)</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="await db.exec(&#x27;CREATE TABLE student (studentNr INTEGER, firstName TEXT, lastName TEXT, course TEXT, semester INTEGER)&#x27;);await db.exec(&#x27;INSERT INTO student VALUES (123, &#x22;Klaus&#x22;, &#x22;Meng&#x22;, &#x22;OMB&#x22;, 2)&#x27;);"><div></div></button></div></figure></div>
+<p>Mehrere Einträge auslesen:</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code data-code-type="Code" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">Code</span> <pre data-language="javascript">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">const </span><span style="--0:#82AAFF;--1:#3C63B3">students</span><span style="--0:#C792EA;--1:#8D46B4"> = await </span><span style="--0:#7FDBCA;--1:#097174">db</span><span style="--0:#C792EA;--1:#8D46B4">.</span><span style="--0:#82AAFF;--1:#3C63B3">all</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">SELECT * FROM student</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="const students = await db.all(&#x27;SELECT * FROM student&#x27;);"><div></div></button></div></figure></div>
+<p>Einzelnen Eintrag auslesen:</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code data-code-type="Code" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">Code</span> <pre data-language="javascript">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">const </span><span style="--0:#82AAFF;--1:#3C63B3">student</span><span style="--0:#C792EA;--1:#8D46B4"> = await </span><span style="--0:#7FDBCA;--1:#097174">db</span><span style="--0:#C792EA;--1:#8D46B4">.</span><span style="--0:#82AAFF;--1:#3C63B3">get</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">SELECT * FROM student WHERE studentNr = ?</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#C792EA;--1:#8D46B4">, </span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">123</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="const student = await db.get(&#x27;SELECT * FROM student WHERE studentNr = ?&#x27;, &#x27;123&#x27;);"><div></div></button></div></figure></div>
+<p>Einzelnen Eintrag bearbeiten:</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><button data-code data-code-type="Code" style="display:none"> ❮❯ </button> <span style="padding-left:0.5em">Code</span> <pre data-language="javascript">    <code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8D46B4">await</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#7FDBCA;--1:#097174">db</span><span style="--0:#C792EA;--1:#8D46B4">.</span><span style="--0:#82AAFF;--1:#3C63B3">run</span><span style="--0:#D6DEEB;--1:#403F53">(</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">UPDATE student SET semester = ? WHERE id = ?</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">3</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#9B504E">123</span><span style="--0:#D9F5DD;--1:#111111">'</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">);</span></div></div></code>
+</pre> <div class="copy"><button title="In die Zwischenablage kopieren" data-copied="Kopiert!" data-code="await db.run(  &#x27;UPDATE student SET semester = ? WHERE id = ?&#x27;,  &#x27;3&#x27;,  &#x27;123&#x27;);"><div></div></button></div></figure></div>
+<section data-footnotes="" class="footnotes"><h2 class="sr-only" id="footnote-label">Footnotes</h2>
+<ol>
+<li id="user-content-fn-transitiveabh">
+<p>Transitive Abhängigkeit: aus der Abhängigkeit a -&gt; b und b -&gt; c folgt, dass auch a -&gt; c <a href="#user-content-fnref-transitiveabh" data-footnote-backref="" aria-label="Back to reference 1" class="data-footnote-backref" target="_blank"> ↩ </a></p>
+</li>
+</ol>
+</section> </div> <footer class="sl-flex astro-3yyafb3n"> <div class="meta sl-flex astro-3yyafb3n">   </div> <div class="pagination-links astro-u2l5gyhi" dir="ltr">   </div>   </footer>  </div> </div>   </main> </div> </div>  </div> <div id="cpg" class="astro-vhvc56sb"><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();;(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t)},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="2bbPa" component-url="/GIS-WS24/_astro/codePlayground.DI15nzhh.js" component-export="default" renderer-url="/GIS-WS24/_astro/client.DD_5wmH1.js" props="{&quot;codePlaygroundOpen&quot;:[0,&quot;true&quot;],&quot;class&quot;:[0,&quot;astro-vhvc56sb&quot;]}" ssr="" client="only" opts="{&quot;name&quot;:&quot;CodePlayground&quot;,&quot;value&quot;:true}"></astro-island></div> </div>  <!-- <Default {...Astro.props}>
+    XXXXXXXXXXXXXXXXXx
+    <slot />
+    <Header {...Astro.props}/>
+    <Sidebar {...Astro.props}/>
+    <CodePlayground client:only codePlaygroundOpen="true"></CodePlayground>
+</Default> --> </body></html>
